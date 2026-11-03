@@ -10,7 +10,7 @@ import streamlit as st
 from src.frontend.config.settings import Settings
 
 settings = Settings()
-API_URL = settings.api_url
+API_URL = f"{settings.api_url}/predict"
 
 
 st.set_page_config(
