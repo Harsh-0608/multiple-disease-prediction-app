@@ -9,9 +9,9 @@ from src.training.diabetes import replace_zeros_with_nan
 
 __main__.replace_zeros_with_nan = replace_zeros_with_nan
 settings=Settings()
-DIABETES_MODEL_PATH=settings.diabetes_model_path_absolute
-HEART_DISEASE_MODEL_PATH=settings.heart_disease_model_path_absolute
-LOG_PATH=settings.log_path_absolute
+DIABETES_MODEL_PATH=Path(settings.diabetes_model_path)
+HEART_DISEASE_MODEL_PATH=Path(settings.heart_disease_model_path)
+LOG_PATH=Path(settings.LOG_PATH)
 LOG_PATH.parent.mkdir(parents=True,exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,

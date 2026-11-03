@@ -5,6 +5,7 @@ import yaml
 import numpy as np
 import pandas as pd
 
+from pathlib import Path
 from joblib import dump
 
 from sklearn.model_selection import train_test_split
@@ -21,7 +22,7 @@ from sklearn.metrics import (
     f1_score,
 )
 
-from src.training.config.settings import Settings
+from src.training.config.settings import settings
 
 
 def replace_zeros_with_nan(X):
@@ -49,27 +50,28 @@ def train_diabetes_model():
 
     try:
 
-        settings = Settings()
         print("Training function is executing!", flush=True)
 
-        DATASET_PATH = settings.diabetes_dataset_path_absolute
+        DATASET_PATH = Path(settings.diabetes_dataset_path)
 
-        MODEL_PATH = settings.diabetes_model_path_absolute
+        MODEL_PATH = Path(settings.diabetes_model_path)
 
-        LOG_PATH = settings.log_path_absolute
-        HYPER_PARAMS_YAML_PATH = (
-             settings.hyper_params_yaml_path_absolute
-)
-      
+        LOG_PATH = Path(settings.LOG_PATH)
+
+        HYPER_PARAMS_YAML_PATH = Path(
+            settings.hyper_params_yaml_path
+        )
+
         MODEL_PATH.parent.mkdir(
-                    parents=True,
-                    exist_ok=True,
-                )
-        
+            parents=True,
+            exist_ok=True,
+        )
+
         LOG_PATH.parent.mkdir(
-                    parents=True,
-                    exist_ok=True,
-                )
+            parents=True,
+            exist_ok=True,
+        )
+
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s | %(levelname)s | %(message)s",
@@ -81,14 +83,9 @@ def train_diabetes_model():
                 ),
             ],
             force=True,
-        )   
-        logging.info("Diabetes Training Started")     
+        )
 
-        # if not HYPER_PARAMS_YAML_PATH.exists():
-        #     raise FileNotFoundError(
-        #         f"Hyperparameters YAML file not found: "
-        #         f"{HYPER_PARAMS_YAML_PATH}"
-        #     )
+        logging.info("Diabetes Training Started")
 
         with open(
             HYPER_PARAMS_YAML_PATH,
@@ -100,14 +97,11 @@ def train_diabetes_model():
 
         model_params = hyperparams["diabetes"]["params"]
 
-
         TARGET_COL = settings.diabetes_target_col
 
         TEST_SIZE = settings.test_size
 
         RANDOM_STATE = settings.RANDOM_STATE
-         
-
 
         df = pd.read_csv(DATASET_PATH)
 
@@ -147,7 +141,7 @@ def train_diabetes_model():
                                 FunctionTransformer(
                                     replace_zeros_with_nan,
                                     validate=False,
-                                ),
+                            ),
                             ),
                             (
                                 "imputer",
@@ -166,8 +160,6 @@ def train_diabetes_model():
             ],
             remainder="drop",
         )
-
-       
 
         model = SVC(
             random_state=RANDOM_STATE,
@@ -229,6 +221,9 @@ def train_diabetes_model():
 
         raise
 
+
 if __name__ == "__main__":
+
     print("Starting diabetes training...", flush=True)
+
     train_diabetes_model()

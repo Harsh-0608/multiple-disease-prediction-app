@@ -1,9 +1,11 @@
 
+
 import logging
 import yaml
 
 import pandas as pd
 
+from pathlib import Path
 from joblib import dump
 
 from sklearn.model_selection import GroupShuffleSplit
@@ -18,29 +20,28 @@ from sklearn.metrics import (
     f1_score,
 )
 
-from src.training.config.settings import Settings
+from src.training.config.settings import settings
 
 
 def train_model():
 
     try:
 
-        settings = Settings()
-
         print("Training function is executing!", flush=True)
 
-        DATA_SET_PATH = (
-            settings.heart_disease_dataset_path_absolute
+        DATA_SET_PATH = Path(
+            settings.heart_disease_dataset_path
         )
 
-        MODEL_PATH = (
-            settings.heart_disease_model_path_absolute
+        MODEL_PATH = Path(
+            settings.heart_disease_model_path
         )
 
-        LOG_PATH = settings.log_path_absolute
+        LOG_PATH = Path(settings.LOG_PATH)
 
-        HYPER_PARAMS_YAML_PATH = settings.hyper_params_yaml_path_absolute
-        
+        HYPER_PARAMS_YAML_PATH = Path(
+            settings.hyper_params_yaml_path
+        )
 
         TARGET_COL = settings.heart_disease_target_col
 
